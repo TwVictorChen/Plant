@@ -1,0 +1,116 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/colorBackground">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Control Panel"
+        android:textSize="24sp"
+        android:textColor="@color/colorTextPrimary"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="16dp"
+        android:background="#000000" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonForward"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Forward"
+            android:background="@color/colorButtonBackground"
+            android:textColor="@color/colorButtonText"
+            android:layout_margin="4dp" />
+
+        <Button
+            android:id="@+id/buttonBackward"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Backward"
+            android:background="@color/colorButtonBackground"
+            android:textColor="@color/colorButtonText"
+            android:layout_margin="4dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonLeft"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Left"
+            android:background="@color/colorButtonBackground"
+            android:textColor="@color/colorButtonText"
+            android:layout_margin="4dp" />
+
+        <Button
+            android:id="@+id/buttonRight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Right"
+            android:background="@color/colorButtonBackground"
+            android:textColor="@color/colorButtonText"
+            android:layout_margin="4dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/buttonMotorOn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Motor On"
+            android:background="@color/colorAccent"
+            android:textColor="@color/colorButtonText"
+            android:layout_margin="4dp" />
+
+        <Button
+            android:id="@+id/buttonMotorOff"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Motor Off"
+            android:background="@color/colorAccent"
+            android:textColor="@color/colorButtonText"
+            android:layout_margin="4dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/buttonBackToFirstPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back to Main Page"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorButtonText" />
+</LinearLayout>

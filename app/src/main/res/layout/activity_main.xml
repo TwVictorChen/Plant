@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/colorBackground">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Server Connection"
+        android:textSize="24sp"
+        android:textColor="@color/colorTextPrimary"
+        android:gravity="center"
+        android:paddingBottom="16dp" />
+
+    <EditText
+        android:id="@+id/editTextIP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter IP Address"
+        android:inputType="text"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="?android:attr/editTextBackground" />
+
+    <EditText
+        android:id="@+id/editTextPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Port Number"
+        android:inputType="number"
+        android:padding="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="?android:attr/editTextBackground" />
+
+    <Button
+        android:id="@+id/buttonConnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorButtonText"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status"
+        android:textColor="@color/colorTextSecondary"
+        android:gravity="center"
+        android:layout_marginBottom="20dp" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="@color/colorTextPrimary" />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/buttonGoToSecondPage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Go to Control Page"
+        android:background="@color/colorAccent"
+        android:textColor="@color/colorButtonText"
+        android:layout_marginTop="20dp" />
+</LinearLayout>
