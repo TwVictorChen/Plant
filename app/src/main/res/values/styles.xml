@@ -1,0 +1,21 @@
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ButtonStyle">
+        <item name="android:background">@color/colorButtonBackground</item>
+        <item name="android:textColor">@color/colorButtonText</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="AccentButtonStyle" parent="ButtonStyle">
+        <item name="android:background">@color/colorAccent</item>
+    </style>
+
+    <style name="PrimaryButtonStyle" parent="ButtonStyle">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+</resources>

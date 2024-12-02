@@ -8,6 +8,16 @@ import java.io.Serializable;
 import java.net.Socket;
 import android.os.AsyncTask;
 import android.util.Log;
+// Imports ...
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Serializable;
+import java.net.Socket;
+import java.util.concurrent.CompletableFuture;
+import android.util.Log;
 
 public class TcpClient extends Thread implements Serializable {
     private String ip;
@@ -34,47 +44,50 @@ public class TcpClient extends Thread implements Serializable {
     @Override
     public void run() {
         try {
-            socket = new Socket(ip, port);
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            if (listener != null) {
-                listener.onConnected();
-                Log.d(TAG, "Connected to server");
-            }
-
-            String message;
-            while ((message = in.readLine()) != null) {
-                if (listener != null) {
-                    listener.onMessageReceived(message);
-                    Log.d(TAG, "Message received: " + message);
-                }
-            }
+            connectToServer();
         } catch (IOException e) {
-            if (listener != null) {
-                listener.onConnectionFailed(e.getMessage());
-            }
-            Log.e(TAG, "Connection failed: " + e.getMessage(), e);
+            handleConnectionError(e);
         }
     }
 
-    public void sendCommand(String command) {
-        new SendCommandTask().execute(command);
+    private void connectToServer() throws IOException {
+        socket = new Socket(ip, port);
+        out = new PrintWriter(socket.getOutputStream(), true);
+        in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+        if (listener != null) {
+            listener.onConnected();
+            Log.d(TAG, "Connected to server");
+        }
+
+        String message;
+        while ((message = in.readLine()) != null) {
+            if (listener != null) {
+                listener.onMessageReceived(message);
+                Log.d(TAG, "Message received: " + message);
+            }
+        }
     }
 
-    private class SendCommandTask extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... commands) {
+    private void handleConnectionError(IOException e) {
+        if (listener != null) {
+            listener.onConnectionFailed(e.getMessage());
+        }
+        Log.e(TAG, "Connection failed: " + e.getMessage(), e);
+        closeResources();
+    }
+
+    public void sendCommand(String command) {
+        CompletableFuture.runAsync(() -> {
             try {
                 if (out != null) {
-                    out.println(commands[0]);
-                    Log.d(TAG, "Command sent: " + commands[0]);
+                    out.println(command);
+                    Log.d(TAG, "Command sent: " + command);
                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error sending command: " + e.getMessage(), e);
             }
-            return null;
-        }
+        });
     }
 
     public boolean isConnected() {
@@ -82,27 +95,23 @@ public class TcpClient extends Thread implements Serializable {
     }
 
     public void disconnect() {
+        closeResources();
+    }
+
+    private void closeResources() {
         try {
             if (socket != null && !socket.isClosed()) {
                 socket.close();
                 Log.d(TAG, "Socket disconnected");
             }
+            if (in != null) {
+                in.close();
+            }
+            if (out != null) {
+                out.close();
+            }
         } catch (IOException e) {
-            Log.e(TAG, "Error disconnecting socket: " + e.getMessage(), e);
+            Log.e(TAG, "Error closing resources: " + e.getMessage(), e);
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
