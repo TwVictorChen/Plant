@@ -4,21 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.WebSettings;
-import android.webkit.WebView;
-import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.plant.databinding.ActivityControlBinding;
 
 public class ControlActivity extends AppCompatActivity {
-    private Button buttonBackToFirstPage;
-    private WebView webView;
-    private Button buttonForward;
-    private Button buttonBackward;
-    private Button buttonLeft;
-    private Button buttonRight;
-    private Button buttonMotorOn;
-    private Button buttonMotorOff;
+    private ActivityControlBinding binding;
     private TcpClient tcpClient;
 
     private static final String TAG = "ControlActivity";
@@ -26,112 +17,51 @@ public class ControlActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_control);
+        binding = ActivityControlBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        buttonBackToFirstPage = findViewById(R.id.buttonBackToFirstPage);
-        webView = findViewById(R.id.webView);
-        buttonForward = findViewById(R.id.buttonForward);
-        buttonBackward = findViewById(R.id.buttonBackward);
-        buttonLeft = findViewById(R.id.buttonLeft);
-        buttonRight = findViewById(R.id.buttonRight);
-        buttonMotorOn = findViewById(R.id.buttonMotorOn);
-        buttonMotorOff = findViewById(R.id.buttonMotorOff);
-
-        // 獲取 TcpClient 實例
         tcpClient = TcpClientManager.getTcpClient();
 
-        if (tcpClient == null) {
-            Log.e(TAG, "tcpClient is null");
+        if (tcpClient == null || !tcpClient.isConnected()) {
+            Log.e(TAG, "TCP connection failed");
             Toast.makeText(this, "Failed to establish TCP connection", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!tcpClient.isConnected()) {
-            Log.e(TAG, "tcpClient is not connected");
-            Toast.makeText(this, "Failed to establish TCP connection", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        binding.buttonBackToFirstPage.setOnClickListener(v -> startActivity(new Intent(ControlActivity.this, MainActivity.class)));
+        binding.buttonForward.setOnClickListener(v -> sendCommand("A"));
+        binding.buttonBackward.setOnClickListener(v -> sendCommand("B"));
+        binding.buttonLeft.setOnClickListener(v -> sendCommand("C"));
+        binding.buttonRight.setOnClickListener(v -> sendCommand("D"));
+        binding.buttonStop.setOnClickListener(v -> sendCommand("Z"));
+        binding.buttonMotorOn.setOnClickListener(v -> sendCommand("L"));
+        binding.buttonMotorOff.setOnClickListener(v -> sendCommand("H"));
 
-        buttonBackToFirstPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ControlActivity.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        buttonForward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendCommand("FORWARD");
-            }
-        });
-
-        buttonBackward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendCommand("BACKWARD");
-            }
-        });
-
-        buttonLeft.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendCommand("LEFT");
-            }
-        });
-
-        buttonRight.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendCommand("RIGHT");
-            }
-        });
-
-        buttonMotorOn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendCommand("MOTOR_ON");
-            }
-        });
-
-        buttonMotorOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendCommand("MOTOR_OFF");
-            }
-        });
-
-        // 初始化 WebView 並加載指定網址
         initializeWebView("http://192.168.57.103");
     }
 
     private void initializeWebView(String url) {
-        WebSettings webSettings = webView.getSettings();
+        WebSettings webSettings = binding.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        webView.loadUrl(url);
+        binding.webView.loadUrl(url);
     }
 
     private void sendCommand(String command) {
-        try {
-            if (tcpClient != null && tcpClient.isConnected()) {
-                tcpClient.sendCommand(command);
-                Log.d(TAG, "Command sent: " + command);
-            } else {
-                Toast.makeText(this, "Failed to send command: Not connected", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Failed to send command: Not connected");
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Error sending command", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Error sending command: " + e.getMessage(), e);
+        if (tcpClient != null && tcpClient.isConnected()) {
+            tcpClient.sendCommand(command);
+            Log.d(TAG, "Command sent: " + command);
+        } else {
+            String errorMessage = "Failed to send command: Not connected";
+            Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
+            Log.e(TAG, errorMessage);
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (webView != null) {
-            webView.destroy();
+        if (binding.webView != null) {
+            binding.webView.destroy();
         }
     }
 }
